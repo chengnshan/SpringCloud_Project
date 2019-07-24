@@ -5,7 +5,7 @@
 
     <parent>
         <groupId>com.cxp</groupId>
-        <artifactId>SpringCloud</artifactId>
+        <artifactId>SpringCloud_Project</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
@@ -28,6 +28,10 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
         <dependency>
