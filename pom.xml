@@ -25,7 +25,10 @@
 
     <modules>
         <module>springcloud-eureka-server</module>
+        <module>springcloud-eureka-server1</module>
         <module>springcloud_feign</module>
+        <module>springcloud-ribbon</module>
+        <module>springcloud-producer</module>
     </modules>
 
     <dependencyManagement>
