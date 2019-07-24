@@ -1,0 +1,34 @@
+server:
+  port: 8763
+
+eureka:
+  instance:
+      hostname: peer3
+      #续约到期时间（默认90秒）
+      lease-expiration-duration-in-seconds: 30
+      #续约更新时间间隔（默认30秒）,使得eureka及时剔除无效服务
+      lease-renewal-interval-in-seconds: 10
+      prefer-ip-address: true
+      #使在eureka监控界面看到的实例为ip+port形式
+      instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+      #这里要跟‘spring.application.name’一致，还有‘prefer-ip-address’为false,同时开启自身注册，‘available-replicas’有效副本才不为空
+      appname: springcloud-eureka-server
+  client:
+      service-url:
+        defaultZone: http://peer2:8762/eureka/,http://peer1:8761/eureka/
+   #    register-with-eureka: false #是否注册到自身服务端，默认为true，高可用需要注册到本身
+   #    fetch-registry: false #是否从服务器拉取注册信息，默认为true
+  server:
+    #关闭自我保护模式（缺省为打开）
+    enable-self-preservation: false
+    #续期时间，清理无效服务的时间间隔，默认是60*1000
+    eviction-interval-timer-in-ms: 10000
+spring:
+  application:
+    name: springcloud-eureka-server
+  profiles: peer3
+  cloud:
+    client:
+      ipAddress: 127.0.0.1
+
+
