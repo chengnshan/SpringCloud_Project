@@ -24,7 +24,7 @@
     </properties>
 
     <modules>
-        <module>springcloud_eureka</module>
+        <module>springcloud-eureka-server</module>
         <module>springcloud_feign</module>
     </modules>
 
