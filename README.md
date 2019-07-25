@@ -11,6 +11,7 @@ SpringCloud
 2.Feign 整合了ribbon.
 
 Feign具有如下特性：
+    
     可插拔的注解支持，包括Feign注解和JAX-RS注解;
     支持可插拔的HTTP编码器和解码器;
     支持Hystrix和它的Fallback;
