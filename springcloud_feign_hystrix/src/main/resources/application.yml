@@ -1,0 +1,39 @@
+server:
+  port: 8801
+  servlet:
+    context-path: /feignHystrix
+spring:
+  application:
+    name: springcloud-feign-hystrix
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/,http://localhost:8763/eureka/  #,http://localhost:8762/eureka/
+    eureka-server-connect-timeout-seconds: 5
+feign:
+  compression:
+    request:
+      enabled: true
+      mime-types: text/xml,application/xml,application/json #用于支持的媒体类型列表
+      min-request-size: 2048  #用于设置请求的最小阈值，默认是2048
+    response:
+      enabled: true
+  httpclient:
+  #禁用默认的http，启用okhttp
+    enabled: false
+  okhttp:
+    enabled: true
+  hystrix:
+    enabled: true
+#定义feignClient接口的日志级别
+logging:
+  level:
+  # 将Feign接口的日志级别设置为DEBUG，因为Feign的Logger.Level只对DEBUG作出响应
+    com.cxp.springcloud_feign.feign_interface.ProducerServcice: debug
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
