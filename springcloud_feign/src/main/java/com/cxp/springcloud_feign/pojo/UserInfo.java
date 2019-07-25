@@ -1,5 +1,6 @@
 package com.cxp.springcloud_feign.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class UserInfo implements Serializable {
     private String passWord;
     private String userSex;
     private String nickName;
+    @JsonFormat(pattern = "YYYY-mm-dd")
     private Date birthday;
     private String jobs;
 

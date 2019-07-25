@@ -1,0 +1,41 @@
+    Feign是一个声明式的伪Http客户端，它使得写Http客户端变得更简单。使用Feign，只需要创建一个接口并注解。它具有可插拔的注解特性，
+可使用Feign注解和JAX-RS注解。Feign支持可插拔的编码器和解码器。Feign默认集成了Ribbon，并和Eureka结合，默认实现了负载均衡的效果。
+
+Feign高级应用为如下几条：
+    1.使用feign进行服务间的调用。
+    2.feign开启Gzip压缩。
+        Spring Cloud Feign支持对请求与响应的压缩，以提高通信效率，在服务消费者配置文件开启压缩支持和压缩文件的类型即可。
+            #feign 请求与响应的压缩
+            feign.compression.request.enabled=true
+            feign.compression.response.enabled=true
+            feign.compression.request.mime-types=text/xml,application/xml,application/json #用于支持的媒体类型列表
+            feign.compression.request.min-request-size=2048 #用于设置请求的最小阈值，默认是2048
+
+    3.feign开启日志。
+        feign开启日志有两种方式，一种是使用配置文件，一种是使用java代码 。
+
+    4.feign替换JDK默认的URLConnection为okhttp。
+        使用okhttp，能提高qps，因为okhttp有连接池和超时时间进行调优。
+
+    5.feign超时设置。
+        # feign启用hystrix，才能熔断、降级
+        feign.hystrix.enabled=true
+
+        # hystrix的超时时间
+        hystrix.command.default.execution.timeout.enabled=true
+        hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=10000
+
+        # ribbon的超时时间
+        ribbon.ReadTimeout=10000
+        ribbon.ConnectTimeout=10000
+
+    6.feign使用hystrix进行熔断、降级处理。
+
+
+
+
+
+
+
+
+
