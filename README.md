@@ -7,5 +7,5 @@ Feign是一个声明式的伪Http客户端，它使得写Http客户端变得更�
 
 简而言之：
 
-Feign 采用的是基于接口的注解
-Feign 整合了ribbon
+Feign 采用的是基于接口的注解.
+Feign 整合了ribbon.
