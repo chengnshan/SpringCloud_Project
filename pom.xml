@@ -29,6 +29,9 @@
         <module>springcloud_feign</module>
         <module>springcloud-ribbon</module>
         <module>springcloud-producer</module>
+        <module>springcloud-hystrix</module>
+        <module>springcloud-ribbon-hystrix</module>
+        <module>springcloud_feign_hystrix</module>
     </modules>
 
     <dependencyManagement>
