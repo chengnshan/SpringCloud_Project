@@ -1,0 +1,52 @@
+server:
+  port: 8800
+  servlet:
+    context-path: /ribbonHystrix
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/,http://localhost:8763/eureka/
+    healthcheck:
+      enabled: true
+spring:
+  application:
+    name: springcloud-ribbon-hystrix
+#数据源
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.153.135:3306/springboot2-project?useUnicode=true&characterEncoding=utf-8
+    password: 123456
+    username: root
+#针对单个服务的 Ribbon 配置
+SPRINGCLOUD-PRODUCER:
+  ribbon:
+    ## 基于配置文件形式的 针对单个服务的 Ribbon 负载均衡策略
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule
+    ##超时重试机制
+    ##Spring Cloud 整合了Spring Retry 来增强RestTemplate的重试能力，当一次服务调用失败后，不会立即抛出一次，而是再次重试另一个服务
+    ConnectTimeout: 1000 # Ribbon的连接超时时间
+    ReadTimeout: 3000 # Ribbon的数据读取超时时间
+    OkToRetryOnAllOperations: true # 是否对所有操作都进行重试
+    MaxAutoRetriesNextServer: 1 # 切换实例的重试次数
+    MaxAutoRetries: 1 # 对当前实例的最大重试次数，当Eureka中可以找到服务，但是服务连不上时将会重试
+
+hystrix:
+  command:
+      default:
+        execution:
+          isolation:
+            thread:
+            #在使用 Ribbon 时，只需要配置 Hystrix 的超时时间就可以生效，不需要额外配置 Ribbon 的超时时间
+              timeoutInMilliseconds: 5000
+      ribbonHystrixTestOne:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 5000
+      ribbonHystrixTestTwo:
+              execution:
+                isolation:
+                  thread:
+                    timeoutInMilliseconds: 3000
+
+
