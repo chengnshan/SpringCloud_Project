@@ -1,0 +1,13 @@
+
+在Spring Cloud封装的Feign中并不直接支持传文件，但可以通过引入Feign的扩展包来实现.
+    Feign消费端添加依赖:
+        <dependency>
+            <groupId>io.github.openfeign.form</groupId>
+            <artifactId>feign-form</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign.form</groupId>
+            <artifactId>feign-form-spring</artifactId>
+            <version>3.8.0</version>
+        </dependency>
