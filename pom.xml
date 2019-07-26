@@ -32,6 +32,7 @@
         <module>springcloud-hystrix</module>
         <module>springcloud-ribbon-hystrix</module>
         <module>springcloud_feign_hystrix</module>
+        <module>springcloud-zuul</module>
     </modules>
 
     <dependencyManagement>
