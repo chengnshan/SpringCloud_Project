@@ -1,0 +1,24 @@
+server:
+  port: 8802
+  servlet:
+    context-path: /hystrix
+spring:
+  application:
+    name: springcloud-hystrix
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/,http://localhost:8763/eureka/  #,http://localhost:8762/eureka/
+    eureka-server-connect-timeout-seconds: 5
+feign:
+  hystrix:
+    enabled: true
+hystrix:
+  command:
+    default:
+    #设置所有实例的默认值(默认是THREAD)
+      execution:
+        isolation:
+          strategy: THREAD
+
+
