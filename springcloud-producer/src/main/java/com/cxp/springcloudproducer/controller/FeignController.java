@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author 程
@@ -52,6 +53,11 @@ public class FeignController {
     public List<UserInfo> getUserInfoByMap(@RequestParam Map<String,Object> map){
         log.info("feignTest in param1: "+ map);
         List<UserInfo> userInfoList = userInfoMapper.findUserInfoListByMap(map);
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return userInfoList;
     }
 }
