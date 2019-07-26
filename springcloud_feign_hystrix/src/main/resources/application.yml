@@ -1,10 +1,12 @@
 server:
-  port: 8801
+  port: 8803
   servlet:
     context-path: /feignHystrix
 spring:
   application:
     name: springcloud-feign-hystrix
+  main:
+    allow-bean-definition-overriding: true
 eureka:
   client:
     service-url:
@@ -24,16 +26,23 @@ feign:
   okhttp:
     enabled: true
   hystrix:
+  #feign开启hystrix断路器功能,默认是关闭的
     enabled: true
+  client:
+    config:
+      default:
+        connectTimeOut: 2000
+        readTimeOut: 4000
 #定义feignClient接口的日志级别
 logging:
   level:
   # 将Feign接口的日志级别设置为DEBUG，因为Feign的Logger.Level只对DEBUG作出响应
     com.cxp.springcloud_feign.feign_interface.ProducerServcice: debug
+    com.cxp.springcloud_feign.feign_interface.UserInfoService: debug
 hystrix:
   command:
     default:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 3000
+            timeoutInMilliseconds: 60000

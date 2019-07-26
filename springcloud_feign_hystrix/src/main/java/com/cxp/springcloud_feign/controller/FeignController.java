@@ -1,6 +1,7 @@
 package com.cxp.springcloud_feign.controller;
 
 import com.cxp.springcloud_feign.feign_interface.ProducerServcice;
+import com.cxp.springcloud_feign.feign_interface.UserInfoService;
 import com.cxp.springcloud_feign.pojo.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,9 @@ public class FeignController {
 
     @Autowired
     private ProducerServcice producerServcice;
+
+    @Autowired
+    private UserInfoService userInfoService;
 
     @RequestMapping(value = "/requestProducerByFeign")
     public String requestProducerByFeign(){
@@ -44,7 +48,9 @@ public class FeignController {
 
     @RequestMapping(value = "/reqeustProducerByMap")
     public List<UserInfo> reqeustProducerByMap(@RequestParam Map<String,Object> map){
-        List<UserInfo> userInfos = producerServcice.reqeustProducerByMap(map);
+        System.out.println(userInfoService);
+        System.out.println(producerServcice);
+        List<UserInfo> userInfos = userInfoService.reqeustProducerByMap(map);
         return userInfos;
     }
 }

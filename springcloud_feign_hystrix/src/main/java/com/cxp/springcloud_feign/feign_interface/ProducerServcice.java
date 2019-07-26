@@ -2,17 +2,20 @@ package com.cxp.springcloud_feign.feign_interface;
 
 import com.cxp.springcloud_feign.config.FeignLogConfig;
 import com.cxp.springcloud_feign.pojo.UserInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author 程
  * @date 2019/7/24 下午6:51
  */
-@FeignClient(value = "springcloud-producer",configuration = {FeignLogConfig.class})
+@FeignClient(value = "springcloud-producer",configuration = {FeignLogConfig.class}
+            ,fallback = ProducerServcice.ProducerServciceHystrix.class)
 public interface ProducerServcice {
 
     /**
@@ -42,11 +45,27 @@ public interface ProducerServcice {
     public List<UserInfo> reqeustProducerParam(@RequestParam(value = "userName") String userName,
                                                @RequestParam(value = "passWord") String passWord);
 
-    /**
-     *
-     * @param map
-     * @return
-     */
-    @GetMapping(value = "/producer/getUserInfoByMap")
-    public List<UserInfo> reqeustProducerByMap(@RequestParam Map<String,Object> map);
+    @Component
+    @Slf4j
+    class ProducerServciceHystrix implements ProducerServcice {
+
+        @Override
+        public String requestProducerObj(UserInfo userInfo) {
+            log.info("ProducerServciceHystrix实现ProducerServcice接口,方法requestProducerObj,来实现熔断!");
+            return "sorry 服务不可用";
+        }
+
+        @Override
+        public UserInfo reqeustProducerRest(Integer id) {
+            log.info("ProducerServciceHystrix实现ProducerServcice接口,reqeustProducerRest,来实现熔断!");
+            return new UserInfo();
+        }
+
+        @Override
+        public List<UserInfo> reqeustProducerParam(String userName, String passWord) {
+            log.info("ProducerServciceHystrix实现ProducerServcice接口来实现熔断!");
+            return new ArrayList<>();
+        }
+
+    }
 }
