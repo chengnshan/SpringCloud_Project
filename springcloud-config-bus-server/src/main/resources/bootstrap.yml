@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: springcloud-config-bus-server
+  profiles:
+    active: git
+  cloud:
+    config:
+      #git仓库配置
+      server:
+        git:
+          uri: https://github.com/chengnshan/SpringcloudConfig.git
+          search-paths: demo-config-file
+          default-label: master
+          username: chengnshan
+          password: 3862398_peng
+    #开启总线消息更新功能
+    bus:
+      enabled: true
+      trace:
+        enabled: true
+      refresh:
+        enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/,http://localhost:8763/eureka/
+    # 多久拉取服务注册信息 表示从“发现”服务器获取注册表信息的频率（以秒为单位）
+    registry-fetch-interval-seconds: 20
+  instance:
+    appname: springcloud-config-bus-server
+    prefer-ip-address: true
+    # 心跳时间,即每15秒发送一次心跳,表明客户端需要将心跳发送到服务器端，以表明它还活着。如果心跳停止的时间超过了服务器设置的等待时间，
+    # 那么服务器端将会从它的服务列表中删除该实例，从而将流量排除在该实例之外。默认30s
+    lease-renewal-interval-in-seconds: 15
+    # 60s未收到心跳，剔除instance 要比心跳时间大 服务器端等待的时间
+    lease-expiration-duration-in-seconds: 60
+
+
+
