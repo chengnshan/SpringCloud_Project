@@ -50,4 +50,14 @@ public class UserInfo implements Serializable {
         this.birthday = birthday;
     }
 
+    public UserInfo(Integer id, String userName, String passWord, String userSex, String nickName,
+                    Date birthday,String jobs){
+        this.id = id;
+        this.userName = userName;
+        this.passWord = passWord;
+        this.userSex = userSex;
+        this.nickName = nickName;
+        this.birthday = birthday;
+        this.jobs = jobs;
+    }
 }
