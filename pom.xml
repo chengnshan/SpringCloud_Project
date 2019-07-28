@@ -33,6 +33,12 @@
         <module>springcloud-ribbon-hystrix</module>
         <module>springcloud_feign_hystrix</module>
         <module>springcloud-zuul</module>
+        <module>springcloud-feign-upload</module>
+        <module>springcloud-config-server</module>
+        <module>springcloud-config-client</module>
+        <module>springcloud-config-bus-server</module>
+        <module>springcloud-config-bus-client</module>
+        <module>springcloud-config-bus-client2</module>
     </modules>
 
     <dependencyManagement>
