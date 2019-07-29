@@ -12,6 +12,7 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/,http://localhost:8763/eureka/  #,http://localhost:8762/eureka/
     eureka-server-connect-timeout-seconds: 5
+    eureka-server-read-timeout-seconds: 8
 feign:
   compression:
     request:
@@ -31,8 +32,8 @@ feign:
   client:
     config:
       default:
-        connectTimeOut: 2000
-        readTimeOut: 4000
+        connectTimeOut: 1000
+        readTimeOut: 2000
 #定义feignClient接口的日志级别
 logging:
   level:
@@ -44,5 +45,15 @@ hystrix:
     default:
       execution:
         isolation:
+          #表示HystrixCommand.run()的执行时的隔离策略(THREAD:线程池隔离；SEMAPHORE信号量隔离)
+          strategy: THREAD
           thread:
-            timeoutInMilliseconds: 60000
+          #用来设置thread和semaphore两种隔离策略的超时时间，默认值是1000
+            timeoutInMilliseconds: 5000
+          #发生超时是是否中断线程，默认是true。
+            interruptOnTimeout: true
+          #取消时是否中断线程，默认是false。
+            interruptOnCancel: false
+          #是否开启超时，默认是true，开启。
+        timeout:
+          enabled: true
