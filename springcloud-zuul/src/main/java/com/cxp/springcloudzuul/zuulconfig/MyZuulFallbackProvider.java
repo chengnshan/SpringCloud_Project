@@ -13,7 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
+/** 自定义异常回退处理类
  * @author 程
  * @date 2019/7/26 下午12:26
  */
