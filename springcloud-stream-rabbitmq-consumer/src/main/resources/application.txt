@@ -1,0 +1,56 @@
+server:
+  port: 8814
+  servlet:
+    context-path:
+
+spring:
+  cloud:
+    stream:
+      binders:
+        defaultRabbit:
+          type: rabbit # 消息组件类型
+          environment: # 设置rabbitmq的相关的环境配置
+            spring:
+              rabbitmq:
+                host: 192.168.111.134
+                port: 5672
+                username: admin
+                password: admin
+                virtual-host: /
+      bindings:
+        input1: #通道名称
+          binder: defaultRabbit
+          destination: Theme-People
+          #spring.cloud.stream.bindings.{bing}.group: 当接收方有多个实例在运行的时候, 如果只想消息被处理
+          # 一次(不管被那个实例处理), 则需要设置这个组
+          #配置通道的消费者组。仅应用于输入通道。
+          group: Group-Boy
+          #通道（channel）承载的内容的类型。
+          content-type: application/json
+        input2:
+          binder: defaultRabbit
+          destination: Theme-People-Girl   #对应rabbitmq中的exchange交换机
+          group: Group-Girl #对应rabbitmq中的queue
+          content-type: application/json
+          consumer:
+          #spring.cloud.stream.bindings.input.consumer.partitioned：通过该参数开启消费者分区功能
+            partitioned: true
+            max-attempts: 1
+      #这个是配置应用实例的数量。如果使用kafka，必须设置分区。默认值为1
+      #spring.cloud.stream.instanceCount：该参数指定了当前消费者的总实例数量
+      instance-count: 2
+      #spring.cloud.stream.instanceIndex：该参数设置当前实例的索引号，从0开始，
+      #最大值为spring.cloud.stream.instanceCount参数 - 1
+      instance-index: 0
+
+
+
+
+
+
+
+
+
+
+
+
