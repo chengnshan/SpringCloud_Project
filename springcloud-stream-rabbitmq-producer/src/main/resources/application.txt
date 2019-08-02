@@ -1,0 +1,42 @@
+server:
+  port: 8813
+  servlet:
+    context-path: /stream-rabbitmq-producer
+spring:
+  cloud:
+    stream:
+      # 在此处配置要绑定的rabbitmq的服务信息；
+      binders:
+        myRabbit: # 表示定义的名称，用于于binding整合
+          type: rabbit # 消息组件类型
+          environment: # 设置rabbitmq的相关的环境配置
+            spring:
+              rabbitmq:
+                host: 192.168.111.134
+                port: 5672
+                username: admin
+                password: admin
+                virtual-host: /
+      bindings: # 服务的整合处理
+        output1: # 这个名字是一个通道的名称，在分析具体源代码的时候会进行说明
+        #spring.cloud.stream.bindings.{bing}.destination: 这个是消息沟通的通道, 如果使用了消息分组和分区,
+        # 则需要设置该属性, 而且也要一致, 否则消息的接收方接收不到发送方发送的消息.
+          destination: Theme-People # 表示要使用的Exchange名称定义
+          content-type: application/json # 设置消息类型，本次为对象json，如果是文本则设置“text/plain”
+          binder: myRabbit #设置要绑定的消息服务的具体设置
+        output2:
+          destination: Theme-People-Girl
+          content-type: application/json
+          binder: myRabbit
+          producer: #设置分区键的表达式规则和设置消息分区数量
+          #spring.cloud.stream.bindings.output.producer.partitionKeyExpression：通过该参数指定了分区键
+          #的表达式规则，我们可以根据实际的输出消息规则来配置SpEL来生成合适的分区键；
+            partitionKeyExpression: payload.age
+          #spring.cloud.stream.bindings.output.producer.partitionCount：该参数指定了消息分区的数量
+            partitionCount: 2
+
+
+
+
+
+
