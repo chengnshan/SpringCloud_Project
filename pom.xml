@@ -41,6 +41,7 @@
         <module>springcloud-config-bus-client2</module>
         <module>springcloud-stream-rabbitmq-producer</module>
         <module>springcloud-stream-rabbitmq-consumer</module>
+        <module>springcloud-stream-kafka-producer</module>
     </modules>
 
     <dependencyManagement>
