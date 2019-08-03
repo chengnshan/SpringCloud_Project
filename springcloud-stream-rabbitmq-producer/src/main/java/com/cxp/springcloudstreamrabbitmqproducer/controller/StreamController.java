@@ -3,7 +3,11 @@ package com.cxp.springcloudstreamrabbitmqproducer.controller;
 import com.cxp.springcloudstreamrabbitmqproducer.service.StreamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -20,8 +24,15 @@ public class StreamController {
     private StreamService streamService;
 
     @GetMapping("/sendMessageByChannalName")
-    public void sendMessage(String channel) {
-        streamService.sendMessage(channel);
+    public void sendMessage(@RequestParam(value = "channel",required = true)String channel,
+                            @RequestParam(value = "age",required = true) Integer age ,
+                            String type) {
+        streamService.sendMessage(channel, age, type);
     }
 
+    public static void main(String[] args) {
+        ExpressionParser parser = new SpelExpressionParser();
+        Expression expression = parser.parseExpression("'Theme-People.*'");
+        System.out.println(expression.getValue());
+    }
 }
