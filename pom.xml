@@ -42,6 +42,7 @@
         <module>springcloud-stream-rabbitmq-producer</module>
         <module>springcloud-stream-rabbitmq-consumer</module>
         <module>springcloud-stream-kafka-producer</module>
+        <module>springcloud-stream-kafka-consumer</module>
     </modules>
 
     <dependencyManagement>
