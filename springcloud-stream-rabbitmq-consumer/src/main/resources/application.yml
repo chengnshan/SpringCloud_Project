@@ -1,0 +1,113 @@
+server:
+  port: 8814
+  servlet:
+    context-path:
+
+spring:
+  cloud:
+    stream:
+      binders:
+        defaultRabbit:
+          type: rabbit # 消息组件类型
+          environment: # 设置rabbitmq的相关的环境配置
+            spring:
+              rabbitmq:
+                host: 192.168.153.136
+                port: 5672
+                username: admin
+                password: admin
+                virtual-host: /
+      bindings:
+        input1: #通道名称
+          binder: defaultRabbit
+          destination: Theme-People
+          #spring.cloud.stream.bindings.{bing}.group: 当接收方有多个实例在运行的时候, 如果只想消息被处理
+          # 一次(不管被那个实例处理), 则需要设置这个组
+          #配置通道的消费者组。仅应用于输入通道。
+          group: Group-Boy
+          #通道（channel）承载的内容的类型。
+          content-type: application/json
+          max-attempts: 1
+        input2:
+          binder: defaultRabbit
+          destination: Theme-People-Girl   #对应rabbitmq中的exchange交换机
+          group: Group-Girl #对应rabbitmq中的queue
+          content-type: application/json
+          consumer:
+            #自动开启消费
+            autoStartup: true
+            ## 初始/最少/空闲时 消费者数量。默认1
+            concurrency: 2
+            #默认:false; spring.cloud.stream.bindings.input.consumer.partitioned：通过该参数开启消费者分区功能
+            partitioned: true
+            #默认值：-1,自定义此使用者的实例计数,注意：此设置将覆盖在“spring.cloud.stream.instance.count”中设置的
+            instanceCount: -1
+            #默认值：-1,自定义此使用者的实例索引注意：此设置将覆盖在“spring.cloud.stream.instance.instanceIndex”中设置的
+            instanceIndex: -1
+            #如果处理失败，则处理消息对输入通道最大重试次数的尝试次数（包括第一次）。设置为1以禁用重试。默认值是3
+            max-attempts: 1
+            #消息消费失败后重试消费消息的初始化间隔时间1000ms
+            backOffInitialInterval: 1000
+            #相邻两次重试之间的间隔时间的倍数。默认2，即第二次是第一次间隔时间的2倍，第三次是第二次的2倍
+            backOffMultiplier: 2
+            #下一次尝试重试的最大时间间隔，默认为10000ms
+            backOffMaxInterval: 10000
+      #这个是配置应用实例的数量。如果使用kafka，必须设置分区。默认值为1
+      #spring.cloud.stream.instanceCount：该参数指定了当前消费者的总实例数量
+      instance-count: 2
+      #spring.cloud.stream.instanceIndex：该参数设置当前实例的索引号，从0开始，
+      #最大值为spring.cloud.stream.instanceCount参数 - 1
+      instance-index: 0
+      rabbit:
+        bindings:
+          input1:
+            consumer:
+              prefix: People-
+              #用于将队列绑定到交换机的路由密钥（如果bindQueue是true）,对于分区绑定键 destination-<instanceIndex> 将被追加。
+              bindingRoutingKey: Theme-People.*
+              #默认值:true,是否将队列绑定到目标交换; 设置为false如果您已设置自己的基础结构并且之前已创建/绑定队列。
+              bindQueue: true
+              #确认模式,默认值:AUTO，可选值:AUTO,MANUAL,NONE
+              acknowledgeMode: MANUAL
+              consumerTagPrefix: People-consume-
+              republishToDlq: true
+              #自动将死信队列绑定到DLX(死信交换机),为true时,普通队列设置的死信路由键将生动生成: ${destination}.${group}
+              autoBindDlq: true
+              #定义普通队列绑定的死信交换机exchange
+              deadLetterExchange: Theme-People.exchange.dlx
+              deadLetterQueueName: Theme-People.queue.dlq
+
+          input2:
+            consumer:
+              ## 默认：1。queue的消费者的最大数量。当前消费者数量不足以及时消费消息时, 会动态增加消费者数量, 直到到达最大数量, 即该配置的值
+              maxConcurrency: 2
+              #消费者每次从队列获取的消息数量,默认值1
+              prefetch: 1
+              #每个确认的消息数（并在事务处理时提交）默认值1
+              txSize: 1
+              #如果为真，则返回拒绝的消息；如果为假，则放弃（或路由到DLQ）,默认为false
+              requeueRejected: false
+              #确认模式,默认值：自动
+              acknowledgeMode: MANUAL
+              #重新连接尝试之间的间隔，默认值5000ms
+              recoveryInterval: 5000
+              #rabbitmq监听器类型,默认simle
+              containerType: SIMPLE
+              #默认为false,默认情况下，拒绝重试后失败的消息。如果配置了死信队列（DLQ），RabbitMQ会将失败的消息（未更改）路由到DLQ。
+              #如果设置为true，绑定器将使用其他标头将失败的消息重新发布到DLQ，包括异常消息和最终失败原因的堆栈跟踪,消息发布到DLQ的同时，还在存在于原来队列的unack中
+              republishToDlq: true
+              #是否自动声明DLQ并将其绑定到绑定器DLX。
+              autoBindDlq: true
+              prefix: Girl-
+              #定义普通队列绑定的死信交换机exchange
+              deadLetterExchange: Girl-Theme-People-Girl.exchange.dlx
+              deadLetterQueueName: Girl-Theme-People-Girl.queue.dlq
+
+
+
+
+
+
+
+
+
