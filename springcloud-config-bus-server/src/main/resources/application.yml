@@ -1,0 +1,18 @@
+server:
+  port: 8810
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,info,env,bus-refresh
+
+spring:
+  rabbitmq:
+    port: 5672
+    virtual-host: /
+    host: 192.168.111.134
+    username: admin
+    password: admin
+
+
