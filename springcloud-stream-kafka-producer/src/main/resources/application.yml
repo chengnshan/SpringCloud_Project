@@ -1,0 +1,53 @@
+server:
+  port: 8820
+  servlet:
+    context-path: /stream-kafka-producer
+
+spring:
+  cloud:
+    stream:
+      default-binder: kafka
+    #  dynamic-destinations:
+      binders:
+        mykafka:
+          type: kafka
+          environment:
+            spring:
+              kafka:
+                bootstrap-servers: 192.168.153.136:9092
+                producer:
+                  retries: 0
+                  key-serializer: org.apache.kafka.common.serialization.StringSerializer
+                  # 值的序列化方式
+                  value-serializer: org.apache.kafka.common.serialization.StringSerializer
+                  # acks=0 ： 生产者在成功写入消息之前不会等待任何来自服务器的响应。
+                  # acks=1 ： 只要集群的首领节点收到消息，生产者就会收到一个来自服务器成功响应。
+                  # acks=all ：只有当所有参与复制的节点全部收到消息时，生产者才会收到一个来自服务器的成功响应。
+                  acks: all
+                  #生产者生成的所有数据的压缩类型，none不压缩,此配置接受标准压缩编解码器（'gzip'，'snappy'，'lz4'），
+                  compression-type: gzip
+      bindings:
+        output:
+          destination: stream-kafka-one
+          group: stream-one
+          contentType: application/json
+          binder: mykafka
+          producer:
+            autoStartup: true
+          #  partitionKeyExpression:
+            partitionCount: 1
+      kafka:
+        bindings:
+          output:
+            producer:
+              #Kafka生产者在发送之前尝试批量处理的数据的上限（以字节为单位）。
+              bufferSize: 16384
+              compressionType: gzip
+              #生产者是否是同步的。默认值：false。
+              sync: false
+              #根据用于填充生成的Kafka消息的密钥的传出消息评估SpEL表达式 - 例如，headers['myKey']。无法使用有效负载，
+              #因为在评估此表达式时，有效负载已经是a的形式byte[]。默认值：none。
+              messageKeyExpression: none
+
+
+
