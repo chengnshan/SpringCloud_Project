@@ -1,0 +1,63 @@
+
+    Spring Cloud Config为服务端和客户端提供了分布式系统的外部化配置支持。配置服务器为各应用的所有环境提供了一个中心化的外部配置。
+它实现了对服务端和客户端对Spring Environment和PropertySource抽象的映射，所以它除了适用于Spring构建的应用程序，也可以在任何其他语言
+运行的应用程序中使用。作为一个应用可以通过部署管道来进行测试或者投入生产，我们可以分别为这些环境创建配置，并且在需要迁移环境的时候获取对应环境的配置来运行。
+
+    配置服务器默认采用git来存储配置信息，这样就有助于对环境配置进行版本管理，并且可以通过git客户端工具来方便的管理和访问配置内容。当然他也
+提供本地化文件系统的存储方式，下面从这两方面介绍如何使用分布式配置来存储微服务应用多环境的配置内容。
+
+这里有一个大坑，现在大部分的教程都是基于Spring Boot 1.X版本的，但是对于spring cloud config的配置，1.X和2.X版本是有一些不同的。
+    在1.X中是不用配置management.endpoints.web.exposure.include，然后在手动更新配置时用的
+路径为http://服务项目ip:服务项目port/refresh。
+    但是在2.X中，是不存在/refresh该路径的，需要我们自行配置management.endpoints.web.exposure.include=refresh,health,info，
+然后访问路径为http://服务项目ip:服务项目port/actuator/refresh。
+
+========================================================================================================
+在服务端在从配置中心获取配置信息时，如果出现了网络波动，导致项目启动时无法获取信息的话，可以使用如下配置来规避。
+在原有基础上添加依赖
+    <!--添加  重试机制 的依赖因网络的抖动等原因导致在启动时候访问config-server没有访问成功从而报错，希望config-client
+        能重试几次，故重试机制-->
+        	<dependency>
+            	<groupId>org.springframework.retry</groupId>
+           		<artifactId>spring-retry</artifactId>
+        	</dependency>
+        	<dependency>
+            	<groupId>org.springframework.boot</groupId>
+            	<artifactId>spring-boot-starter-aop</artifactId>
+        	</dependency>
+
+application.properties在原有基础上添加配置:
+    #retry
+    #和重试机制相关的配置有如下四个：
+    # 配置重试次数，默认为6
+    spring.cloud.config.retry.max-attempts=6
+    # 间隔乘数，默认1.1
+    spring.cloud.config.retry.multiplier=1.1
+    # 初始重试间隔时间，默认1000ms
+    spring.cloud.config.retry.initial-interval=1000
+    # 最大间隔时间，默认2000ms
+    spring.cloud.config.retry.max-interval=2000
+
+bootstrap.properties在原有基础上添加配置:
+    #启动失败时能够快速响应
+    #spring.cloud.config.fail-fast=true
+========================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
