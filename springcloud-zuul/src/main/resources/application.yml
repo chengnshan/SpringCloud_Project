@@ -1,0 +1,67 @@
+server:
+  port: 8805
+spring:
+  application:
+    name: springcloud-zuul
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/,http://localhost:8763/eureka/  #,http://localhost:8762/eureka/
+  instance:
+    appname: springcloud-zuul
+zuul:
+  routes:
+    feign-hystrix:
+      path: /feign-hystrix/**
+      serviceId: springcloud-feign-hystrix
+    ribbon-hystrix:
+      path: /ribbon-hystrix/**
+      serviceId: springcloud-ribbon-hystrix
+    producer:
+      path: /producer/**
+      serviceId: springcloud-producer
+  #如果通过指定URL配置了Zuul路由，则需要使用zuul.host.connect-timeout-millis和zuul.host.socket-timeout-millis。
+  host:
+    #HTTP连接超时大于Hystrix的超时时间
+    connect-timeout-millis: 10000
+    #socket超时
+    socket-timeout-millis: 10000
+
+#如果Zuul使用服务发现，则需要使用ribbon.ReadTimeout和ribbon.SocketTimeout功能区属性配置这些超时。
+#Ribbon的配置项还可以加一个 ClientName 为前缀（这个方法的出处在官方的 wiki），区分不同客户端下的配置，
+# 这个ClientName我是直接用了 serviceId
+feign-hystrix:
+  ribbon:
+    #该参数用来设置路由转发请求的超时时间。
+    ReadTimeout: 10000
+    #该参数用来设置路由转发请求的时候，创建请求连接的超时时间
+    ConnectTimeout: 10000
+producer:
+  ribbon:
+    #该参数用来设置路由转发请求的超时时间。
+    ReadTimeout: 10000
+    #该参数用来设置路由转发请求的时候，创建请求连接的超时时间
+    ConnectTimeout: 10000
+
+#hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds用来设置thread和semaphore两种隔离策略的
+# 超时时间，默认值是1000,该参数用来设置API网关中路由转发请求的HystrixCommand超时时间，单位为毫秒。当路由转发请求的命令执行时间
+# 超过该配置值后，Hystrix会将该执行命令标记为TIMEOUT并抛出异常。
+#  建议通过CommandKey设置不同微服务的超时时间,对于zuul而言，CommandKey就是service id.
+hystrix:
+  command:
+    springcloud-producer:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+    springcloud-feign-hystrix:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+ribbon:
+  http:
+    client:
+      enabled: false
+  okhttp:
+    enabled: true
