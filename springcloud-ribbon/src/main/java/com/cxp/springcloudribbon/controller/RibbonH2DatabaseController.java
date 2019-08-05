@@ -16,15 +16,17 @@ import javax.annotation.Resource;
  */
 @Controller
 @Slf4j
-public class RibbonController {
+public class RibbonH2DatabaseController {
 
     @Resource
     private RibbonService ribbonService;
 
-    @RequestMapping(value = "/requestProducer")
+    @RequestMapping(value = "/requestProducerH2Database")
     @ResponseBody
-    public String requestProducer(@RequestBody UserInfo_H2Database userInfo){
-        String ribbon = ribbonService.requestRibbonH2("http://SPRINGCLOUD-PRODUCER/producer/ribbonTest", userInfo);
+    public String requestProducerH2Database(@RequestBody UserInfo_H2Database userInfo){
+        String ribbon = ribbonService.requestRibbonH2(
+                "http://SPRINGCLOUD-PRODUCER-H2DATABASE/producer-h2database/ribbonTest",
+                userInfo);
         return ribbon;
     }
 }

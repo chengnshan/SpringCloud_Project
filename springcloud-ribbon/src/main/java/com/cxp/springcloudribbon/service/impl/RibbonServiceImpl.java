@@ -1,6 +1,7 @@
 package com.cxp.springcloudribbon.service.impl;
 
 import com.cxp.springcloudribbon.pojo.UserInfo;
+import com.cxp.springcloudribbon.pojo.UserInfo_H2Database;
 import com.cxp.springcloudribbon.service.RibbonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -26,6 +27,20 @@ public class RibbonServiceImpl implements RibbonService {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
         HttpEntity<UserInfo> httpEntity = new HttpEntity<UserInfo>(userInfo,httpHeaders);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+        if (responseEntity != null && responseEntity.getStatusCode() == HttpStatus.OK){
+            return responseEntity.getBody();
+        }
+        return null;
+    }
+
+    @Override
+    public String requestRibbonH2(String url, UserInfo_H2Database userInfo) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("contentType","application/json;charset=UTF-8");
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        HttpEntity<UserInfo_H2Database> httpEntity = new HttpEntity<UserInfo_H2Database>(userInfo,httpHeaders);
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
         if (responseEntity != null && responseEntity.getStatusCode() == HttpStatus.OK){
             return responseEntity.getBody();

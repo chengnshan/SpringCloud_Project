@@ -1,6 +1,7 @@
 package com.cxp.springcloudribbon.service;
 
 import com.cxp.springcloudribbon.pojo.UserInfo;
+import com.cxp.springcloudribbon.pojo.UserInfo_H2Database;
 
 /**
  * @author 程
@@ -13,4 +14,6 @@ public interface RibbonService {
     }
 
     public String requestRibbon(String url, UserInfo userInfo);
+
+    public String requestRibbonH2(String url, UserInfo_H2Database userInfo);
 }
