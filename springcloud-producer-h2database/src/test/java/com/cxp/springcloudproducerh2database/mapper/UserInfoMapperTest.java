@@ -21,7 +21,7 @@ public class UserInfoMapperTest {
     public void testSelect() {
         System.out.println(("----- selectAll method test ------"));
         List<UserInfo> userList = userInfoMapper.selectList(null);
-        Assert.assertEquals(5, userList.size());
+        Assert.assertEquals(7, userList.size());
         userList.forEach(System.out::println);
     }
 }

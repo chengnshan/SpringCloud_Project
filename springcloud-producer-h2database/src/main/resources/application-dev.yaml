@@ -1,0 +1,13 @@
+server:
+  port: 8901
+  servlet:
+    context-path: /producer-h2database
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+    data: classpath:db/data-h2.sql
+    schema: classpath:db/schema-h2.sql
+    driver-class-name: org.h2.Driver
+    username: root
+    password: test
