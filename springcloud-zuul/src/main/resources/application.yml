@@ -11,6 +11,9 @@ eureka:
     appname: springcloud-zuul
 zuul:
   routes:
+    feign:
+      path: /feign/**
+      serviceId: springcloud-feign
     feign-hystrix:
       path: /feign-hystrix/**
       serviceId: springcloud-feign-hystrix
@@ -20,6 +23,9 @@ zuul:
     producer:
       path: /producer/**
       serviceId: springcloud-producer
+    producer-h2database:
+      path: /producer-h2database/**
+      serviceId: springcloud-producer-h2database
   #如果通过指定URL配置了Zuul路由，则需要使用zuul.host.connect-timeout-millis和zuul.host.socket-timeout-millis。
   host:
     #HTTP连接超时大于Hystrix的超时时间
