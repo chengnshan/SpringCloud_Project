@@ -1,5 +1,6 @@
 package com.cxp.springcloudproducerh2database.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cxp.springcloudproducerh2database.config.ServerConfig;
 import com.cxp.springcloudproducerh2database.mapper.UserInfoMapper;
 import com.cxp.springcloudproducerh2database.pojo.UserInfo;
@@ -33,7 +34,7 @@ public class FeignController {
 
     @RequestMapping(value = "/feignTestRest/{id}")
     public UserInfo feignTestRest(@PathVariable(value = "id") Integer id){
-        log.info("feignTest in param: "+ id);
+        log.info("feignTestRest in param: "+ id);
         UserInfo userInfoById = userInfoMapper.selectById(id);
         return userInfoById;
     }
@@ -41,18 +42,19 @@ public class FeignController {
     @RequestMapping(value = "/feignTestParam")
     public List<UserInfo> feignTestParam(@RequestParam(value = "userName") String userName,
                                          String passWord){
-        log.info("feignTest in param1: "+ userName +",param2 : "+passWord);
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUsername(userName);
-        userInfo.setPassword(passWord);
+        log.info("feignTestParam in param1: "+ userName +",param2 : "+passWord);
 
-        List<UserInfo> userInfos = userInfoMapper.selectList(null);
+        List<UserInfo> userInfos = userInfoMapper.selectList(
+                new QueryWrapper<UserInfo>()
+                        .lambda()
+                        .eq(UserInfo::getUsername,userName)
+                        .eq(UserInfo::getPassword,passWord));
         return userInfos;
     }
 
     @RequestMapping(value = "/getUserInfoByMap")
     public List<UserInfo> getUserInfoByMap(@RequestParam Map<String,Object> map){
-        log.info("feignTest in param1: "+ map);
+        log.info("getUserInfoByMap in param1: "+ map);
         List<UserInfo> userInfoList = userInfoMapper.selectByMap(map);
         try {
             TimeUnit.SECONDS.sleep(3);
