@@ -28,4 +28,18 @@ logging:
   level:
   # 将Feign接口的日志级别设置为DEBUG，因为Feign的Logger.Level只对DEBUG作出响应
     com.cxp.springcloud_feign.feign_interface.ProducerServcice: debug
-
+    com.cxp.springcloud_feign.feign_interface.ProducerH2DatabaseServcice: debug
+hystrix:
+  command:
+    springcloud-producer-h2database:
+      #feign调用默认是1000毫秒=1秒   应该设置成更长时间1000 * 60 * 5  = 5分钟
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+ribbon:
+  #该参数用来设置路由转发请求的超时时间。
+  ReadTimeout: 4000
+  #该参数用来设置路由转发请求的时候，创建请求连接的超时时间
+  ConnectTimeout: 4000
+  SocketTimeout: 4000
