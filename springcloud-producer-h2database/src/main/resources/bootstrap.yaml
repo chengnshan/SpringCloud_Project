@@ -9,12 +9,12 @@ spring:
     name: springcloud-producer-h2database
   cloud:
     config:
-      enabled: true
-      discovery:
-        enabled: true
-        service-id: SPRINGCLOUD-CONFIG-SERVER
-      profile: dev
-      label: master
+      enabled: false
+#      discovery:
+#        enabled: true
+#        service-id: SPRINGCLOUD-CONFIG-SERVER
+#      profile: dev
+#      label: master
 
 
 

@@ -3,9 +3,12 @@ package com.cxp.springcloudproducerh2database.controller;
 import com.cxp.springcloudproducerh2database.pojo.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,5 +28,19 @@ public class HystrixController {
             e.printStackTrace();
         }
         return userInfo;
+    }
+
+    @RequestMapping(value = "/transferRequestHeader")
+    public String transferRequestHeader(HttpServletRequest request){
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()){
+            String name = headerNames.nextElement();
+            Enumeration<String> headers = request.getHeaders(name);
+            while (headers.hasMoreElements()){
+                String value = headers.nextElement();
+                System.out.println(name+"  ===  "+value);
+            }
+        }
+        return null;
     }
 }
