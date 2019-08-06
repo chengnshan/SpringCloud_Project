@@ -23,6 +23,9 @@ feign:
     enabled: false
   okhttp:
     enabled: true
+  #hystrix断路器默认关闭
+  hystrix:
+    enabled: false
 #定义feignClient接口的日志级别
 logging:
   level:
