@@ -1,7 +1,9 @@
 package com.cxp.springcloudproducerh2database.controller;
 
+import com.cxp.springcloudproducerh2database.mapper.UserInfoMapper;
 import com.cxp.springcloudproducerh2database.pojo.UserInfo;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,9 +19,12 @@ import java.util.List;
 @RestController
 public class HystrixCollapserController {
 
+    @Autowired
+    private UserInfoMapper userInfoMapper;
+
     @RequestMapping("/collapserById/{id}")
     public UserInfo collapserById(@PathVariable("id") Integer id){
-        UserInfo userInfo = switchIdGetUserInfo(id);
+        UserInfo userInfo = userInfoMapper.selectById(id);
         return userInfo;
     }
 
@@ -34,30 +39,10 @@ public class HystrixCollapserController {
             if (StringUtils.isBlank(str)){
                 continue;
             }
-            userInfo = switchIdGetUserInfo(Integer.valueOf(str));
+            userInfo = userInfoMapper.selectById(Integer.valueOf(str));
             list.add(userInfo);
         }
         return list;
     }
 
-    private UserInfo switchIdGetUserInfo(Integer id){
-        UserInfo userInfo = null;
-        switch (id){
-            case 1:
-                userInfo = new UserInfo(1,"user1","user1","男1","",new Date(),"");
-                break;
-            case 2:
-                userInfo =new UserInfo(2,"user2","user2","男2","",new Date(),"");
-                break;
-            case 3:
-                userInfo = new UserInfo(3,"user3","user3","女3","",new Date(),"");
-                break;
-            case 4:
-                userInfo =new UserInfo(4,"user4","user4","女4","",new Date(),"");
-                break;
-             default:
-                userInfo = new UserInfo();
-        }
-        return userInfo;
-    }
 }
