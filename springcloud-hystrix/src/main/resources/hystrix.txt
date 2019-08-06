@@ -42,7 +42,6 @@ Hystrix线程隔离策略与传播上下文：
     THREAD：线程隔离，HystrixCommand将会在单独的线程上执行，并发请求受线程池中的线程数量的限制。
     SEMAPHORE：信号量隔离，HystrixCommand将会在调用线程上执行，开销相对较小，并发请求受到信号量个数的限制。
 
-
 Hystrix可以配置属性的有以下类型:
     Execution：控制HystrixCommand.run() 的如何执行
     Fallback: 控制HystrixCommand.getFallback() 如何执行
@@ -83,6 +82,7 @@ Hystrix中对请求进行合并是否值得主要取决于Command本身，高并
 多个请求进行整合并以批量方式发起请求的功能（服务提供方也需要提供相应的批量实现接口）。
 
 
+feign调用session丢失解决方案:
 
 
 

@@ -13,7 +13,12 @@ eureka:
     eureka-server-connect-timeout-seconds: 5
     eureka-server-read-timeout-seconds: 8
 feign:
+  #开启hystrix断路器
   hystrix:
+    enabled: true
+  httpclient:
+    enabled: false
+  okhttp:
     enabled: true
 hystrix:
   command:
@@ -25,4 +30,8 @@ hystrix:
           thread:
             #用来设置thread和semaphore两种隔离策略的超时时间，默认值是1000
             timeoutInMilliseconds: 1000
-
+#定义feignClient接口的日志级别
+logging:
+  level:
+    # 将Feign接口的日志级别设置为DEBUG，因为Feign的Logger.Level只对DEBUG作出响应
+    com.cxp.springcloudhystrix.feignclien.FeignRequestHeader: debug

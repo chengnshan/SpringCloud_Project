@@ -17,6 +17,44 @@ Feign具有如下特性：<br>
     支持Ribbon的负载均衡;<br>
     支持HTTP请求和响应的压缩。<br>
 
+feign调用session丢失解决方案:<br/>
+    最近在做项目的时候发现，微服务使用feign相互之间调用时，存在session丢失的问题。例如，使用Feign调用某个远程API，这个远程API需要传递一个鉴权信息，我们可以把cookie里面的session信息放到Header里面，这个Header是动态的，跟你的HttpRequest相关，我们选择编写一个拦截器来实现Header的传递，也就是需要实现RequestInterceptor接口，具体代码如下：
+
+        @Configuration  
+        @EnableFeignClients(basePackages = "com.xxx.xxx.client")  
+        public class FeignClientsConfigurationCustom implements RequestInterceptor {  
+        @Override  
+        public void apply(RequestTemplate template) {  
+    RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();  
+    if (requestAttributes == null) {  
+      return;  
+    }  
+
+    HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();  
+    Enumeration<String> headerNames = request.getHeaderNames();  
+    if (headerNames != null) {  
+      while (headerNames.hasMoreElements()) {  
+        String name = headerNames.nextElement();  
+        Enumeration<String> values = request.getHeaders(name);  
+        while (values.hasMoreElements()) {  
+          String value = values.nextElement();  
+          template.header(name, value);  
+         }  
+       }  
+      }  
+     }  
+    } 
+    
+经过测试，上面的解决方案可以正常的使用；但是，当引入Hystrix熔断策略时，出现了一个新的问题；
+
+    RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+获取不到request信息，从而无法传递session信息，最终发现RequestContextHolder.getRequestAttributes()该方法是从ThreadLocal变量里面取得对应信息的，这就找到问题原因了，由于Hystrix熔断机制导致的。 
+Hystrix有隔离策略：THREAD以及SEMAPHORE，当隔离策略为 THREAD 时，是没办法拿到 ThreadLocal 中的值的。
+
+
+
+
+
 
 四、Zuul
 -------
