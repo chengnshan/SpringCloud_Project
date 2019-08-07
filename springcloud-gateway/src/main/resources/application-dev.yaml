@@ -3,5 +3,35 @@ server:
 spring:
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
+          #服务名小写
+          lower-case-service-id: true
       routes:
-        id:
+        - id: springcloud-producer-h2database
+          # lb代表从注册中心获取服务，且已负载均衡方式转发
+          uri: lb://springcloud-producer-h2database
+          predicates:
+            - Path=/producer-h2database/**
+          # 加上StripPrefix=1，否则转发到后端服务时会带上producer-h2database前缀
+          filters:
+            - StripPrefix=1
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+
+
+
+
+
+
+
