@@ -23,7 +23,7 @@ public class TestH2DatabaseController {
     @RequestMapping(value = "testH2DatabaseMethod")
     public List<UserInfo> testH2DatabaseMethod(){
         Map<String, Object> columnMap=new HashMap<>();
-        columnMap.put("name","Jone");
+        columnMap.put("username","Jone");
         List<UserInfo> userInfos = userInfoMapper.selectByMap(columnMap);
         return userInfos;
     }
