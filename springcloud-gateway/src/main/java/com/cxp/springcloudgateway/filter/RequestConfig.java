@@ -1,5 +1,8 @@
 package com.cxp.springcloudgateway.filter;
 
+import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
+import com.netflix.hystrix.HystrixObservableCommand;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -48,13 +51,20 @@ public class RequestConfig {
         RouteLocatorBuilder.Builder routes = builder.routes();
 
         Function<GatewayFilterSpec, UriSpec> fn = gatewayFilterSpec->{
-            Object newConfig = tokenAuthenticationFilter.newConfig();
-            gatewayFilterSpec.filter(tokenAuthenticationFilter.apply(newConfig));
-            gatewayFilterSpec.filter(requestBodyFilter);
+            gatewayFilterSpec.filter(tokenAuthenticationFilter.apply(tokenAuthenticationFilter.newConfig()));
             gatewayFilterSpec.stripPrefix(1);
             gatewayFilterSpec.prefixPath("/producer-h2database");
+            //设置hystrix
+            gatewayFilterSpec.hystrix(config->{
+                config.setName("Hystrix");
+                HystrixObservableCommand.Setter setter = HystrixObservableCommand.Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("producerh2database"));
+                setter.andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+                        .withExecutionTimeoutEnabled(true).withExecutionTimeoutInMilliseconds(10000));
+                config.setSetter(setter);
+                config.setFallbackUri("forward:/producer-h2database-fallback");
+            });
             return gatewayFilterSpec;
-    };
+        };
 
         RouteLocatorBuilder.Builder serviceProvider =
                 routes

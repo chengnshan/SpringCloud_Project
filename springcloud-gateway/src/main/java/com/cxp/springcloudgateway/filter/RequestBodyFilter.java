@@ -2,8 +2,8 @@ package com.cxp.springcloudgateway.filter;
 
 import io.netty.buffer.ByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -15,7 +15,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
@@ -35,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Component
 @Slf4j
-public class RequestBodyFilter implements GatewayFilter, Ordered {
+public class RequestBodyFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -44,11 +43,22 @@ public class RequestBodyFilter implements GatewayFilter, Ordered {
         System.out.println(" uri : " + strUri);//打印每次请求的url
         String method = serverHttpRequest.getMethodValue();
         if ("POST".equals(method)) {
-            //从请求里获取Post请求体
-            String bodyStr = resolveBodyFromRequest(serverHttpRequest);
-
+            //方式一:从cachedRequestBodyObject中 获取request body参数内容
+            /**
+             * 通过cachedRequestBodyObject缓存字段获取request body信息，这种解决，
+             * 一不会带来重复读取问题，
+             * 二不会带来requestbody取不全问题。
+             * 三在低版本的Spring Cloud Finchley.SR2也可以运行
+             */
             Object requestBody = exchange.getAttribute("cachedRequestBodyObject");
             log.info("request body is:{}", requestBody);
+
+            //方式二:webFlux方式 从请求里获取request body
+            /**
+             * 针对这种不能重复获取的问题，网上通用解决是把request重新包装，继续传递，比如 这篇文章的解决方案。
+             * 但是这种方案还会带来request body获取不完整，只能获取1024B的数据
+             */
+            String bodyStr = resolveBodyFromRequest(serverHttpRequest);
             //TODO 得到Post请求的请求参数后，做你想做的事
 
             //下面的将请求体再次封装写回到request里，传到下一级，否则，由于请求体已被消费，后续的服务将取不到值

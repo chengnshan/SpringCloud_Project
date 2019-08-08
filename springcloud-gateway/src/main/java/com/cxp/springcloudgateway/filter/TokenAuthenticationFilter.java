@@ -24,7 +24,7 @@ import java.util.Map;
 @Component
 public class TokenAuthenticationFilter extends AbstractGatewayFilterFactory {
 
-    private static final String Bearer_ = "Bearer";
+    private static final String Bearer_ = "token_";
 
     @Override
     public GatewayFilter apply(Object config) {
@@ -40,7 +40,7 @@ public class TokenAuthenticationFilter extends AbstractGatewayFilterFactory {
                     throw new RuntimeException("请求头中Authorization信息为空");
                 }
                 //2.截取Authorization Bearer
-                String token = header.substring(7);
+                String token = header.substring(6);
                 //可把token存到redis中，此时直接在redis中判断是否有此key，有则校验通过，否则校验失败
                 if(!StringUtils.isEmpty(token)){
                     System.out.println("验证通过");

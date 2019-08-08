@@ -8,6 +8,22 @@ spring:
           enabled: true
           #服务名小写,如果开启了lowerCaseServiceId,则只能用小写,不能识别大写,如果不开启,只能识别大写
           lower-case-service-id: true
+      routes:
+        - id: springcloud-producer-1
+          # lb代表从注册中心获取服务，且已负载均衡方式转发
+          uri: lb://springcloud-producer
+          predicates:
+            - Path=/producer/**
+          filters:
+            # 进行token过滤
+        #    - TokenAuthenticationFilter
+            # 加上StripPrefix=1，否则转发到后端服务时会带上producer-h2database前缀
+            - StripPrefix=1
+            - PrefixPath=/producer
+            #RedirectTo状态码必须是3xx,否则报错误: status must be a 3xx code, but was 503
+        #    - {"name":"RedirectTo","args":{"_genkey_0":"302","_genkey_1":"http://www.baidu.com"}}
+            #Hystrix过滤器还可以接受可选的fallbackUri参数。 目前，仅支持forward：schemed URIs。 如果调用了回退，请求将被转发到与URI匹配的控制器。
+            - {"name":"Hystrix","args":{"name":"fallbackcmd","fallbackUri":"forward:/producer-fallback"}}
 
 # 暴露监控端点
 management:
@@ -19,8 +35,21 @@ management:
     health:
       show-details: always
 
-
-
+#目前 Hystrix Command 执行超时时，返回客户端 504 状态码
+hystrix:
+  command:
+    #此commandKey指向gateway中设置hystrix中args中的name
+    fallbackcmd:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+    #此commandKey指向gateway中设置hystrix中args中的name
+    defalut:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
 
 
 
