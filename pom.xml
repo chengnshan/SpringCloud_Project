@@ -45,6 +45,7 @@
         <module>springcloud-stream-kafka-consumer</module>
         <module>springcloud-producer-h2database</module>
         <module>springcloud-gateway</module>
+        <module>springcloud-config-server-jdbc</module>
     </modules>
 
     <dependencyManagement>
