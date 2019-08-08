@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: springcloud-config-server-jdbc
+  profiles:
+    active: jdbc
+  cloud:
+    config:
+      server:
+        #读取配置文件的SQL语句
+        jdbc:
+          sql: SELECT `KEY`, `VALUE` FROM config_properties where application=? and PROFILE=? and label=?
+        # 配置中心api前缀
+        prefix: config-server-jdbc
+        bootstrap: false
+  #用mysql数据库
+  datasource:
+    url: jdbc:h2:mem:test
+    data: classpath:db/data-h2.sql
+    schema: classpath:db/schema-h2.sql
+    driver-class-name: org.h2.Driver
+    username: root
+    password: test
+#    url: jdbc:mysql://192.168.153.136:3306/springboot2-project?useUnicode=true&characterEncoding=UTF-8
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: root
+#    password: 123456
+
+eureka:
+  instance:
+    appname: springcloud-config-server-jdbc
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8762/eureka/
+
+
+
+
