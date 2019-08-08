@@ -6,17 +6,8 @@ spring:
       discovery:
         locator:
           enabled: true
-          #服务名小写
+          #服务名小写,如果开启了lowerCaseServiceId,则只能用小写,不能识别大写,如果不开启,只能识别大写
           lower-case-service-id: true
-      routes:
-        - id: springcloud-producer-h2database
-          # lb代表从注册中心获取服务，且已负载均衡方式转发
-          uri: lb://springcloud-producer-h2database
-          predicates:
-            - Path=/producer-h2database/**
-          # 加上StripPrefix=1，否则转发到后端服务时会带上producer-h2database前缀
-          filters:
-            - StripPrefix=1
 
 # 暴露监控端点
 management:
