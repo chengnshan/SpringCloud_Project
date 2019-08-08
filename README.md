@@ -68,4 +68,30 @@ Hystrix有隔离策略：THREAD以及SEMAPHORE，当隔离策略为 THREAD 时�
 
 
 
+五、Spring Cloud Gateway
+-------
+**Spring Cloud Gateway 是什么?** <br/>
+~~~~
+** Spring Cloud Gateway 基于 Spring Boot 2， 是 Spring Cloud 的 全新 项目，<br> 
+该项 目 提供 了 一个 构建 在 Spring 生态 之上 的 API 网关， 包括 Spring 5、 Spring Boot 2 和 Project Reactor。 
+** Spring Cloud Gateway 旨在 提供 一种 简单 而 有效 的 途径 来 转发 请求， 并为 它们 提供 横 切 关注 点， 例如： 安全性、 监控/ 指标 和 弹性。
+~~~~
+
+**Spring Cloud Gateway 特性**
+~~~~
+    基于 Java 8 编码；
+    基于Spring Framework 5，Project Reactor和Spring Boot 2.0构建
+    支持动态路由，能够匹配任何请求属性上的路由。
+    支持 内置 到 Spring Handler 映射 中的 路 由 匹配；
+    支持 基于 HTTP 请求 的 路 由 匹配（ Path、 Method、 Header、 Host 等）；
+    集成了Hystrix断路器
+    过滤器 作用于 匹配 的 路 由；
+    过滤器可以修改 HTTP 请求和HTTP 响应（ 增加/ 修改 头部、 增加/ 修改 请求 参数、 改写 请求 路径 等）；
+    支持 Spring Cloud DiscoveryClient 配置路由，与服务发现与注册配合使用。
+    支持限流
+    支持地址重写
+~~~~
+
+
+
 
